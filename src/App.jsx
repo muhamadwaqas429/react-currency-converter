@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import InputBox from "./components/InputBox";
 import useCurrencyInfo from "./hooks/usecurrencyinfo.js";
 
@@ -11,12 +11,17 @@ function App() {
   const { data: rates, error, loading } = useCurrencyInfo(fromCurrency);
   const options = Object.keys(rates);
 
-  useEffect(() => {
-    if (rates && rates[toCurrency] != null) {
-      setConvertedAmount((amount * rates[toCurrency]).toFixed(2));
-    }
-  }, [rates, amount, toCurrency]);
+  // trigger without button click
+  // useEffect(() => {
+  //   if (rates && rates[toCurrency] != null) {
+  //     setConvertedAmount((amount * rates[toCurrency]).toFixed(2));
+  //   }
+  // }, [rates, amount, toCurrency]);
 
+  //logic only convert if button press
+  const convert = () => {
+    setConvertedAmount((amount * rates[toCurrency]).toFixed(2));
+  };
   const swapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
@@ -45,9 +50,7 @@ function App() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (rates[toCurrency]) {
-              setConvertedAmount((amount * rates[toCurrency]).toFixed(2));
-            }
+            convert();
           }}
         >
           {/* From Input */}
@@ -85,7 +88,7 @@ function App() {
             />
           </div>
 
-          {/* Convert Button */}
+         
           <button
             type="submit"
             className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
@@ -99,3 +102,4 @@ function App() {
 }
 
 export default App;
+
